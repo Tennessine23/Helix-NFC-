@@ -1,0 +1,426 @@
+import { useState, useRef } from "react";
+import {
+  Pencil, Check, Camera, Plus, Trash2, Mail, Phone,
+  Globe, MapPin, Instagram, Linkedin, Twitter,
+  Music2, Github, Youtube, MessageCircle,
+  Link, ExternalLink
+} from "lucide-react";
+
+const LOGO_MARK = "data:image/png;base64,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";
+
+const PLATFORM_ICONS = {
+  instagram: Instagram,
+  linkedin: Linkedin,
+  x: Twitter,
+  tiktok: Music2,
+  github: Github,
+  youtube: Youtube,
+  whatsapp: MessageCircle,
+  website: Globe,
+  other: Link,
+};
+
+const PLATFORM_LABELS = {
+  instagram: "Instagram",
+  linkedin: "LinkedIn",
+  x: "X (Twitter)",
+  tiktok: "TikTok",
+  github: "GitHub",
+  youtube: "YouTube",
+  whatsapp: "WhatsApp",
+  website: "Website",
+  other: "Other",
+};
+
+const ACCENTS = {
+  clay: { name: "Clay", base: "#C2552E", soft: "#F4E4DC", text: "#7A331A" },
+  ink: { name: "Ink", base: "#33415C", soft: "#E4E8EE", text: "#1F2937" },
+  fern: { name: "Fern", base: "#3C6E47", soft: "#E2EDE3", text: "#234A2D" },
+  plum: { name: "Plum", base: "#6B4577", soft: "#ECE3EF", text: "#432B4D" },
+  navy: { name: "Navy", base: "#33457A", soft: "#E2E6F0", text: "#222F54" },
+};
+
+const DEFAULT_PROFILE = {
+  name: "Matthew Karanja",
+  title: "CEO. Helix Tech.",
+  company: "Helix Tech",
+  bio: "I design calm, useful interfaces. Based in Nairobi, working with teams everywhere.",
+  email: "lmknganga@gmail.com",
+  phone: "+254 798184245",
+  location: "Nairobi, Kenya",
+  photo: "",
+  accent: "navy",
+  links: [
+    { id: "l1", platform: "linkedin", value: "linkedin.com/in/Matthew Karanja" },
+    { id: "l2", platform: "instagram", value: "@chihiroyamanakasburner_" },
+    { id: "l3", platform: "website", value: "studiolumen.co" },
+  ],
+};
+
+function initials(name) {
+  return name
+    .split(" ")
+    .map((p) => p[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
+
+function normalizeLink(platform, value) {
+  const v = value.trim();
+  if (!v) return "#";
+  if (v.startsWith("http://") || v.startsWith("https://")) return v;
+  if (platform === "whatsapp") return `https://wa.me/${v.replace(/[^\d]/g, "")}`;
+  if (platform === "instagram") return `https://www.instagram.com/chihiroyamanakasburner_?igsh=amlycGtnbmR4ODVo;
+  if (platform === "x") return `https://x.com/${v.replace("@", "")}`;
+  if (platform === "tiktok") return `https://tiktok.com/@${v.replace("@", "")}`;
+  return `https://${v}`;
+}
+
+export default function NFCProfileCard() {
+  const [profile, setProfile] = useState(DEFAULT_PROFILE);
+  const [editing, setEditing] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const fileRef = useRef(null);
+  const accent = ACCENTS[profile.accent];
+
+  const update = (field, value) =>
+    setProfile((p) => ({ ...p, [field]: value }));
+
+  const updateLink = (id, field, value) =>
+    setProfile((p) => ({
+      ...p,
+      links: p.links.map((l) => (l.id === id ? { ...l, [field]: value } : l)),
+    }));
+
+  const addLink = () =>
+    setProfile((p) => ({
+      ...p,
+      links: [...p.links, { id: `l${Date.now()}`, platform: "website", value: "" }],
+    }));
+
+  const removeLink = (id) =>
+    setProfile((p) => ({ ...p, links: p.links.filter((l) => l.id !== id) }));
+
+  const handlePhoto = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => update("photo", reader.result);
+    reader.readAsDataURL(file);
+  };
+
+  const toggleEdit = () => {
+    if (editing) {
+      setSaved(true);
+      setTimeout(() => setSaved(false), 1800);
+    }
+    setEditing((e) => !e);
+  };
+
+  return (
+    <div
+      style={{
+        background: accent.base,
+        borderRadius: "var(--border-radius-lg)",
+        padding: "2rem 1rem",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage: `url(${LOGO_MARK})`,
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center center",
+          backgroundSize: "480px 480px",
+          opacity: 0.06,
+          pointerEvents: "none",
+        }}
+      />
+      <div style={{ maxWidth: 380, margin: "0 auto", fontFamily: "var(--font-sans)", position: "relative" }}>
+      <h2 className="sr-only" style={{ position: "absolute", left: "-9999px" }}>
+        Customizable NFC digital profile card showing a profile photo, name, title,
+        bio, contact details, and social links, with an edit mode for personalizing
+        every field and an accent color picker.
+      </h2>
+
+      {/* Accent picker + edit toggle */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+        <div style={{ display: "flex", gap: 6 }}>
+          {Object.entries(ACCENTS).map(([key, val]) => (
+            <button
+              key={key}
+              aria-label={`Use ${val.name} accent`}
+              onClick={() => update("accent", key)}
+              style={{
+                width: 22,
+                height: 22,
+                borderRadius: "50%",
+                background: val.base,
+                border: profile.accent === key ? "2px solid #fff" : "2px solid rgba(255,255,255,0.4)",
+                padding: 0,
+                cursor: "pointer",
+              }}
+            />
+          ))}
+        </div>
+        <button
+          onClick={toggleEdit}
+          style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#fff", borderColor: "rgba(255,255,255,0.4)", background: "rgba(255,255,255,0.08)" }}
+        >
+          {editing ? <Check size={16} aria-hidden="true" /> : <Pencil size={16} aria-hidden="true" />}
+          {editing ? "Done" : "Edit profile"}
+        </button>
+      </div>
+
+      {/* Card */}
+      <div
+        style={{
+          background: "var(--color-background-primary)",
+          border: "0.5px solid var(--color-border-tertiary)",
+          borderRadius: "var(--border-radius-lg)",
+          overflow: "hidden",
+        }}
+      >
+        {/* Header band */}
+        <div style={{ background: accent.soft, height: 80, position: "relative" }} />
+
+        {/* Photo */}
+        <div style={{ display: "flex", justifyContent: "center", marginTop: -40 }}>
+          <div style={{ position: "relative" }}>
+            <div
+              style={{
+                width: 80,
+                height: 80,
+                borderRadius: "50%",
+                border: "3px solid var(--color-background-primary)",
+                background: profile.photo ? `url(${profile.photo})` : "#E8A03C",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#3A2A0A",
+                fontSize: 22,
+                fontWeight: 500,
+              }}
+            >
+              {!profile.photo && initials(profile.name)}
+            </div>
+            {editing && (
+              <button
+                onClick={() => fileRef.current?.click()}
+                aria-label="Change profile photo"
+                style={{
+                  position: "absolute",
+                  bottom: -2,
+                  right: -2,
+                  width: 28,
+                  height: 28,
+                  borderRadius: "50%",
+                  background: "var(--color-background-primary)",
+                  border: "0.5px solid var(--color-border-secondary)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: 0,
+                  cursor: "pointer",
+                }}
+              >
+                <Camera size={14} aria-hidden="true" />
+              </button>
+            )}
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              onChange={handlePhoto}
+              style={{ display: "none" }}
+            />
+          </div>
+        </div>
+
+        {/* Identity */}
+        <div style={{ textAlign: "center", padding: "12px 24px 0" }}>
+          {editing ? (
+            <>
+              <input
+                value={profile.name}
+                onChange={(e) => update("name", e.target.value)}
+                placeholder="Full name"
+                style={{ textAlign: "center", fontSize: 18, fontWeight: 500, width: "100%" }}
+              />
+              <div style={{ display: "flex", gap: 6, marginTop: 6 }}>
+                <input
+                  value={profile.title}
+                  onChange={(e) => update("title", e.target.value)}
+                  placeholder="Title"
+                  style={{ textAlign: "center", fontSize: 13, flex: 1 }}
+                />
+                <input
+                  value={profile.company}
+                  onChange={(e) => update("company", e.target.value)}
+                  placeholder="Company"
+                  style={{ textAlign: "center", fontSize: 13, flex: 1 }}
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <p style={{ fontSize: 18, fontWeight: 500, margin: 0 }}>{profile.name}</p>
+              <p style={{ fontSize: 13, color: "var(--color-text-secondary)", margin: "2px 0 0" }}>
+                {profile.title}
+                {profile.company ? ` · ${profile.company}` : ""}
+              </p>
+            </>
+          )}
+        </div>
+
+        {/* Bio */}
+        <div style={{ padding: "12px 24px 0" }}>
+          {editing ? (
+            <textarea
+              value={profile.bio}
+              onChange={(e) => update("bio", e.target.value)}
+              placeholder="Short bio"
+              rows={3}
+              style={{ width: "100%", fontSize: 13, resize: "vertical" }}
+            />
+          ) : (
+            <p style={{ fontSize: 13, lineHeight: 1.6, color: "var(--color-text-secondary)", textAlign: "center", margin: 0 }}>
+              {profile.bio}
+            </p>
+          )}
+        </div>
+
+        {/* Social links */}
+        <div style={{ padding: "16px 20px 0", display: "flex", flexDirection: "column", gap: 8 }}>
+          {profile.links.map((link) => {
+            const Icon = PLATFORM_ICONS[link.platform] || Link;
+            return (
+              <div key={link.id}>
+                {editing ? (
+                  <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                    <select
+                      value={link.platform}
+                      onChange={(e) => updateLink(link.id, "platform", e.target.value)}
+                      style={{ fontSize: 12, width: 110 }}
+                    >
+                      {Object.entries(PLATFORM_LABELS).map(([key, label]) => (
+                        <option key={key} value={key}>{label}</option>
+                      ))}
+                    </select>
+                    <input
+                      value={link.value}
+                      onChange={(e) => updateLink(link.id, "value", e.target.value)}
+                      placeholder="username or url"
+                      style={{ fontSize: 12, flex: 1 }}
+                    />
+                    <button
+                      onClick={() => removeLink(link.id)}
+                      aria-label="Remove link"
+                      style={{ width: 32, height: 32, padding: 0, display: "flex", alignItems: "center", justifyContent: "center" }}
+                    >
+                      <Trash2 size={14} aria-hidden="true" />
+                    </button>
+                  </div>
+                ) : (
+                  link.value && (
+                    <a
+                      href={normalizeLink(link.platform, link.value)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                        padding: "10px 12px",
+                        borderRadius: "var(--border-radius-md)",
+                        border: "0.5px solid var(--color-border-tertiary)",
+                        fontSize: 13,
+                        textDecoration: "none",
+                        color: "var(--color-text-primary)",
+                      }}
+                    >
+                      <span
+                        style={{
+                          width: 28,
+                          height: 28,
+                          borderRadius: "50%",
+                          background: accent.soft,
+                          color: accent.text,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          flexShrink: 0,
+                        }}
+                      >
+                        <Icon size={15} aria-hidden="true" />
+                      </span>
+                      <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {link.value}
+                      </span>
+                      <ExternalLink size={14} aria-hidden="true" style={{ color: "var(--color-text-tertiary)" }} />
+                    </a>
+                  )
+                )}
+              </div>
+            );
+          })}
+          {editing && (
+            <button
+              onClick={addLink}
+              style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontSize: 12, padding: "8px" }}
+            >
+              <Plus size={14} aria-hidden="true" /> Add link
+            </button>
+          )}
+        </div>
+
+        {/* Contact info */}
+        <div style={{ padding: "16px 20px 20px", marginTop: 8, borderTop: "0.5px solid var(--color-border-tertiary)" }}>
+          {[
+            { icon: Mail, field: "email", placeholder: "Email address", href: (v) => `mailto:${v}` },
+            { icon: Phone, field: "phone", placeholder: "Phone number", href: (v) => `tel:${v.replace(/\s/g, "")}` },
+            { icon: MapPin, field: "location", placeholder: "Location", href: null },
+          ].map(({ icon: Icon, field, placeholder, href }) => (
+            <div key={field} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", fontSize: 13 }}>
+              <Icon size={16} aria-hidden="true" style={{ color: accent.text, flexShrink: 0 }} />
+              {editing ? (
+                <input
+                  value={profile[field]}
+                  onChange={(e) => update(field, e.target.value)}
+                  placeholder={placeholder}
+                  style={{ fontSize: 13, flex: 1 }}
+                />
+              ) : profile[field] ? (
+                href ? (
+                  <a href={href(profile[field])} style={{ color: "var(--color-text-primary)", textDecoration: "none" }}>
+                    {profile[field]}
+                  </a>
+                ) : (
+                  <span>{profile[field]}</span>
+                )
+              ) : null}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {saved && (
+        <p style={{ textAlign: "center", fontSize: 12, color: "#fff", marginTop: 10 }}>
+          Profile updated
+        </p>
+      )}
+      {!editing && !saved && (
+        <p style={{ textAlign: "center", fontSize: 12, color: "rgba(255,255,255,0.65)", marginTop: 10 }}>
+          This is the page visitors see after tapping your NFC card
+        </p>
+      )}
+      </div>
+    </div>
+  );
+}
