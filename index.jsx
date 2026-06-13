@@ -72,7 +72,8 @@ function normalizeLink(platform, value) {
   if (!v) return "#";
   if (v.startsWith("http://") || v.startsWith("https://")) return v;
   if (platform === "whatsapp") return `https://wa.me/${v.replace(/[^\d]/g, "")}`;
-  if (platform === "instagram") return `https://www.instagram.com/chihiroyamanakasburner_?igsh=amlycGtnbmR4ODVo;
+  if (platform === "instagram")
+  return "https://www.instagram.com/chihiroyamanakasburner_?igsh=amlycGtnbmR4ODVo";
   if (platform === "x") return `https://x.com/${v.replace("@", "")}`;
   if (platform === "tiktok") return `https://tiktok.com/@${v.replace("@", "")}`;
   return `https://${v}`;
