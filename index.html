@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Helix NFC Profile</title>
+
+<style>
+:root{
+    --accent:#33457A;
+    --accent-soft:#E2E6F0;
+    --accent-text:#222F54;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Inter,Arial,sans-serif;
+}
+
+body{
+    background:var(--accent);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+
+.card{
+    width:100%;
+    max-width:400px;
+    background:#fff;
+    border-radius:24px;
+    overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,.15);
+}
+
+.header{
+    height:90px;
+    background:var(--accent-soft);
+}
+
+.profile-image{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    border:4px solid white;
+    background:#ddd center/cover;
+    margin:-45px auto 10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    font-weight:bold;
+    overflow:hidden;
+}
+
+.content{
+    padding:20px;
+}
+
+.name{
+    text-align:center;
+    font-size:24px;
+    font-weight:700;
+}
+
+.title{
+    text-align:center;
+    color:#666;
+    margin-top:4px;
+}
+
+.bio{
+    text-align:center;
+    margin-top:15px;
+    line-height:1.6;
+    color:#555;
+}
+
+.links{
+    margin-top:25px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.link{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px;
+    border:1px solid #eee;
+    border-radius:12px;
+    text-decoration:none;
+    color:#222;
+    transition:.2s;
+}
+
+.link:hover{
+    transform:translateY(-2px);
+}
+
+.icon{
+    width:35px;
+    height:35px;
+    border-radius:50%;
+    background:var(--accent-soft);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.contact{
+    margin-top:25px;
+    border-top:1px solid #eee;
+    padding-top:20px;
+}
+
+.contact-item{
+    margin-bottom:12px;
+}
+
+.controls{
+    display:flex;
+    justify-content:space-between;
+    padding:15px;
+}
+
+button{
+    border:none;
+    cursor:pointer;
+    border-radius:10px;
+}
+
+.edit-btn{
+    padding:10px 14px;
+    background:var(--accent);
+    color:white;
+}
+
+.color-picker{
+    display:flex;
+    gap:6px;
+}
+
+.color{
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    cursor:pointer;
+}
+
+.editor{
+    display:none;
+    padding:20px;
+    border-top:1px solid #eee;
+}
+
+.editor input,
+.editor textarea{
+    width:100%;
+    margin-bottom:10px;
+    padding:10px;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+
+.save-btn{
+    width:100%;
+    background:var(--accent);
+    color:white;
+    padding:12px;
+}
+
+.upload{
+    margin-bottom:10px;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+
+    <div class="controls">
+        <div class="color-picker">
+            <div class="color" style="background:#C2552E" onclick="setAccent('#C2552E','#F4E4DC','#7A331A')"></div>
+            <div class="color" style="background:#33415C" onclick="setAccent('#33415C','#E4E8EE','#1F2937')"></div>
+            <div class="color" style="background:#3C6E47" onclick="setAccent('#3C6E47','#E2EDE3','#234A2D')"></div>
+            <div class="color" style="background:#6B4577" onclick="setAccent('#6B4577','#ECE3EF','#432B4D')"></div>
+            <div class="color" style="background:#33457A" onclick="setAccent('#33457A','#E2E6F0','#222F54')"></div>
+        </div>
+
+        <button class="edit-btn" onclick="toggleEditor()">Edit</button>
+    </div>
+
+    <div class="header"></div>
+
+    <div class="profile-image" id="avatar">
+        MK
+    </div>
+
+    <div class="content">
+
+        <div class="name" id="displayName">
+            Matthew Karanja
+        </div>
+
+        <div class="title" id="displayTitle">
+            CEO • Helix Tech
+        </div>
+
+        <div class="bio" id="displayBio">
+            I design calm, useful interfaces. Based in Nairobi, working with teams everywhere.
+        </div>
+
+        <div class="links">
+
+            <a class="link"
+               href="https://www.instagram.com/chihiroyamanakasburner_"
+               target="_blank">
+                <div class="icon">📷</div>
+                Instagram
+            </a>
+
+            <a class="link"
+               href="https://linkedin.com"
+               target="_blank">
+                <div class="icon">💼</div>
+                LinkedIn
+            </a>
+
+            <a class="link"
+               href="https://helixtech.co"
+               target="_blank">
+                <div class="icon">🌐</div>
+                Website
+            </a>
+
+        </div>
+
+        <div class="contact">
+
+            <div class="contact-item">
+                📧 <span id="displayEmail">lmknganga@gmail.com</span>
+            </div>
+
+            <div class="contact-item">
+                📱 <span id="displayPhone">+254 798184245</span>
+            </div>
+
+            <div class="contact-item">
+                📍 <span id="displayLocation">Nairobi, Kenya</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="editor" id="editor">
+
+        <input type="file" class="upload" id="photoUpload">
+
+        <input id="nameInput" placeholder="Name">
+
+        <input id="titleInput" placeholder="Title">
+
+        <textarea id="bioInput" placeholder="Bio"></textarea>
+
+        <input id="emailInput" placeholder="Email">
+
+        <input id="phoneInput" placeholder="Phone">
+
+        <input id="locationInput" placeholder="Location">
+
+        <button class="save-btn" onclick="saveProfile()">
+            Save Changes
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+function toggleEditor(){
+    const editor=document.getElementById("editor");
+
+    editor.style.display=
+    editor.style.display==="block"
+    ? "none"
+    : "block";
+}
+
+function saveProfile(){
+
+    document.getElementById("displayName").textContent=
+    document.getElementById("nameInput").value || "Matthew Karanja";
+
+    document.getElementById("displayTitle").textContent=
+    document.getElementById("titleInput").value || "CEO • Helix Tech";
+
+    document.getElementById("displayBio").textContent=
+    document.getElementById("bioInput").value;
+
+    document.getElementById("displayEmail").textContent=
+    document.getElementById("emailInput").value;
+
+    document.getElementById("displayPhone").textContent=
+    document.getElementById("phoneInput").value;
+
+    document.getElementById("displayLocation").textContent=
+    document.getElementById("locationInput").value;
+
+    toggleEditor();
+}
+
+function setAccent(base,soft,text){
+
+    document.documentElement.style.setProperty("--accent",base);
+    document.documentElement.style.setProperty("--accent-soft",soft);
+    document.documentElement.style.setProperty("--accent-text",text);
+
+    document.body.style.background=base;
+}
+
+document.getElementById("photoUpload")
+.addEventListener("change",function(e){
+
+    const file=e.target.files[0];
+    if(!file) return;
+
+    const reader=new FileReader();
+
+    reader.onload=function(ev){
+
+        const avatar=document.getElementById("avatar");
+
+        avatar.style.backgroundImage=
+        `url(${ev.target.result})`;
+
+        avatar.textContent="";
+    };
+
+    reader.readAsDataURL(file);
+});
+</script>
+
+</body>
+</html>
