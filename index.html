@@ -213,7 +213,7 @@ button{
         </div>
 
         <div class="bio" id="displayBio">
-            I design calm, useful interfaces. Based in Nairobi, working with teams everywhere.
+            Tap. Connect. Remember.
         </div>
 
         <div class="links">
@@ -226,7 +226,7 @@ button{
             </a>
 
             <a class="link"
-               href="https://linkedin.com"
+               href="https://www.linkedin.com/in/matthew-karanja-642498364/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BqTCR4p7uRdqS4yOl9htuyg%3D%3D"
                target="_blank">
                 <div class="icon">💼</div>
                 LinkedIn
@@ -261,7 +261,11 @@ button{
 
     <div class="editor" id="editor">
 
-        <input type="file" class="upload" id="photoUpload">
+        <label>Profile Photo</label>
+           <input type="file" class="upload" id="photoUpload" accept="image/*">
+
+        <label>Company Logo</label>
+           <input type="file" class="upload" id="logoUpload" accept="image/*">
 
         <input id="nameInput" placeholder="Name">
 
@@ -282,9 +286,19 @@ button{
     </div>
 
 </div>
-
+    
+<img id="hiddenLogo" style="display:none;">
+    
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
+    
 <script>
 
+    let companyTheme = {
+    primary: "#33457A",
+    secondary: "#E2E6F0",
+    text: "#222F54"
+}; 
+    
 function toggleEditor(){
     const editor=document.getElementById("editor");
 
@@ -317,13 +331,29 @@ function saveProfile(){
     toggleEditor();
 }
 
-function setAccent(base,soft,text){
+function setAccent(primary, secondary, textColor){
 
-    document.documentElement.style.setProperty("--accent",base);
-    document.documentElement.style.setProperty("--accent-soft",soft);
-    document.documentElement.style.setProperty("--accent-text",text);
+    companyTheme = {
+        primary,
+        secondary,
+        text: textColor
+    };
+    document.documentElement.style.setProperty(
+        "--accent",
+        primary
+    );
 
-    document.body.style.background=base;
+    document.documentElement.style.setProperty(
+        "--accent-soft",
+        secondary
+    );
+
+    document.documentElement.style.setProperty(
+        "--accent-text",
+        textColor
+    );
+
+    document.body.style.background = primary;
 }
 
 document.getElementById("photoUpload")
@@ -346,6 +376,61 @@ document.getElementById("photoUpload")
 
     reader.readAsDataURL(file);
 });
+    
+    const logoUpload =
+document.getElementById("logoUpload");
+
+logoUpload.addEventListener("change", function(e){
+
+    const file = e.target.files[0];
+
+    if(!file) return;
+
+    const img =
+    document.getElementById("hiddenLogo");
+
+    img.src = URL.createObjectURL(file);
+
+    img.onload = function(){
+
+        const colorThief =
+        new ColorThief();
+
+        const palette =
+        colorThief.getPalette(img, 5);
+
+        const primary =
+        `rgb(${palette[0][0]},
+             ${palette[0][1]},
+             ${palette[0][2]})`;
+
+        const secondary =
+        `rgb(${palette[1][0]},
+             ${palette[1][1]},
+             ${palette[1][2]})`;
+
+        const textColor =
+        getContrastColor(palette[0]);
+
+        setAccent(
+            primary,
+            secondary,
+            textColor
+        );
+    };
+});
+   
+    function getContrastColor(rgb){
+
+    const brightness =
+    ((rgb[0] * 299) +
+     (rgb[1] * 587) +
+     (rgb[2] * 114)) / 1000;
+
+    return brightness > 128
+        ? "#000000"
+        : "#FFFFFF";
+}
 </script>
 
 </body>
