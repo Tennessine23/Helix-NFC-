@@ -16,7 +16,7 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Inter,Arial,sans-serif;
+    font-family:"Times New Roman", Times, serif;
 }
 
 body{
@@ -43,18 +43,19 @@ body{
 }
 
 .profile-image{
-    width:90px;
-    height:90px;
+    width:120px;
+    height:120px;
     border-radius:50%;
-    border:4px solid white;
-    background:#ddd center/cover;
-    margin:-45px auto 10px;
+    border:5px solid white;
+    background:#ddd center center/cover no-repeat;
+    margin:-60px auto 15px;
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:28px;
+    font-size:36px;
     font-weight:bold;
     overflow:hidden;
+    box-shadow:0 8px 25px rgba(0,0,0,0.15);
 }
 
 .content{
@@ -178,7 +179,33 @@ button{
 .upload{
     margin-bottom:10px;
 }
+    .actions{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+.action-btn{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:12px;
+    text-align:center;
+    text-decoration:none;
+    font-weight:600;
+    cursor:pointer;
+    background:var(--accent);
+    color:white;
+}
+
+.whatsapp-btn{
+    background:#25D366;
+}
+    
 </style>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 </head>
 <body>
 
@@ -199,8 +226,8 @@ button{
     <div class="header"></div>
 
     <div class="profile-image" id="avatar">
-        MK
-    </div>
+    <span id="avatarInitials">MK</span>
+</div>
 
     <div class="content">
 
@@ -221,21 +248,27 @@ button{
             <a class="link"
                href="https://www.instagram.com/chihiroyamanakasburner_"
                target="_blank">
-                <div class="icon">📷</div>
+                <div class="icon">
+    <i class="fab fa-instagram"></i>
+</div>
                 Instagram
             </a>
 
             <a class="link"
                href="https://www.linkedin.com/in/matthew-karanja-642498364/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BqTCR4p7uRdqS4yOl9htuyg%3D%3D"
                target="_blank">
-                <div class="icon">💼</div>
+                <div class="icon">
+    <i class="fab fa-linkedin-in"></i>
+</div>
                 LinkedIn
             </a>
 
             <a class="link"
                href="https://helixtech.co"
                target="_blank">
-                <div class="icon">🌐</div>
+                <div class="icon">
+    <i class="fas fa-globe"></i>
+</div>
                 Website
             </a>
 
@@ -258,7 +291,20 @@ button{
         </div>
 
     </div>
+ <div class="actions">
 
+    <button class="action-btn"
+            onclick="saveContact()">
+        💾 Save Contact
+    </button>
+
+    <a class="action-btn whatsapp-btn"
+       id="whatsappLink"
+       target="_blank">
+       💬 WhatsApp
+    </a>
+
+</div>
     <div class="editor" id="editor">
 
         <label>Profile Photo</label>
@@ -298,6 +344,7 @@ button{
     secondary: "#E2E6F0",
     text: "#222F54"
 }; 
+    updateWhatsAppLink();
     
 function toggleEditor(){
     const editor=document.getElementById("editor");
@@ -327,7 +374,23 @@ function saveProfile(){
 
     document.getElementById("displayLocation").textContent=
     document.getElementById("locationInput").value;
+    
+const name =
+document.getElementById("displayName").textContent;
 
+const initials =
+name.split(" ")
+.map(word => word[0])
+.join("")
+.substring(0,2)
+.toUpperCase();
+
+const initialsElement =
+document.getElementById("avatarInitials");
+
+if(initialsElement){
+    initialsElement.textContent = initials;
+}
     toggleEditor();
 }
 
@@ -431,6 +494,58 @@ logoUpload.addEventListener("change", function(e){
         ? "#000000"
         : "#FFFFFF";
 }
+    function updateWhatsAppLink(){
+
+    const phone =
+    document.getElementById("displayPhone")
+    .textContent
+    .replace(/\D/g,'');
+
+    document.getElementById("whatsappLink")
+    .href =
+    `https://wa.me/${phone}`;
+}
+
+function saveContact(){
+
+    const name =
+    document.getElementById("displayName").textContent;
+
+    const phone =
+    document.getElementById("displayPhone").textContent;
+
+    const email =
+    document.getElementById("displayEmail").textContent;
+
+    const company =
+    document.getElementById("displayTitle").textContent;
+
+    const vcard =
+`BEGIN:VCARD
+VERSION:3.0
+FN:${name}
+ORG:${company}
+TEL:${phone}
+EMAIL:${email}
+END:VCARD`;
+
+    const blob =
+    new Blob([vcard], {
+        type: "text/vcard"
+    });
+
+    const url =
+    URL.createObjectURL(blob);
+
+    const a =
+    document.createElement("a");
+
+    a.href = url;
+    a.download = `${name}.vcf`;
+
+    a.click();
+}
+    
 </script>
 
 </body>
